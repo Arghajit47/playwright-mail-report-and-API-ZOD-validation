@@ -19,12 +19,12 @@ jobs:
       run: npx playwright install --with-deps
     - name: Check if secrets are loaded
       run: |
-        echo "USER_EMAIL: ${{ env.USER_EMAIL }}"
-        echo "SENDER_EMAIL: ${{ env.SENDER_EMAIL }}"
+        echo "USER_EMAIL: ${{ secrets.USER_EMAIL }}"
+        echo "SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}"
       env:
-        USER_EMAIL: ${{ env.USER_EMAIL }}
-        USER_PASSWORD: ${{env.USER_PASSWORD}}
-        SENDER_EMAIL: ${{ env.SENDER_EMAIL }}
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        USER_PASSWORD: ${{secrets.USER_PASSWORD}}
+        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
