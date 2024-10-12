@@ -140,7 +140,7 @@ const sendEmail = async (zipPath) => {
     // Configure mail options
     const mailOptions = {
       from: process.env.USER_EMAIL,
-      to: ["asughan47@gmail.com"],
+      to: [process.env.SENDER_EMAIL || ""],
       subject: "Automation Run Report " + new Date().toLocaleString(),
       html: htmlContent,
       attachments: [
