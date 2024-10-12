@@ -17,10 +17,17 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Set up environment variables
+    - name: Check if secrets are loaded
       run: |
-        echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> .env
-        echo "SENDER_EMAIL=${{ secrets.SENDER_EMAIL }}" >> .env
+        if [ -z "$USER_EMAIL" ] || [ -z "$SENDER_EMAIL" ]; then
+          echo "Secrets are not loaded correctly!"
+          exit 1
+        else
+          echo "Secrets are loaded successfully."
+        fi
+      env:
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
