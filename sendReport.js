@@ -6,6 +6,8 @@ const jsonData = require("./json-report.json");
 const fileSystem = require("fs");
 require("dotenv").config();
 
+let projectName;
+
 const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
 // Function to zip the folder asynchronously using async/await
@@ -32,6 +34,7 @@ const zipFolder = async (folderPath, zipPath) => {
 
 // Function to convert JSON data to HTML table format
 const generateHtmlTable = (data) => {
+  projectName = data.rows[0].title;
   const stats = data.stats;
   const total = stats.expected + stats.unexpected + stats.skipped;
   const passedPercentage = ((stats.expected / total) * 100).toFixed(2);
@@ -66,7 +69,7 @@ const generateHtmlTable = (data) => {
     </style>
   </head>
   <body>
-    <h1>Test Statistics Report</h1>
+    <h1>${projectName} Statistics Report</h1>
     <table>
       <thead>
         <tr>
@@ -113,7 +116,7 @@ const generateHtmlTable = (data) => {
 };
 
 // Async function to send an email
-const sendEmail = async (zipPath) => {
+const sendEmail = async (zipPath, projectName) => {
   try {
     console.log("Starting the sendEmail function...");
 
@@ -145,7 +148,7 @@ const sendEmail = async (zipPath) => {
       html: htmlContent,
       attachments: [
         {
-          filename: "report.html",
+          filename: `${projectName} report.html`,
           path: reportPath, // Attach the zipped folder
           contentType: "html",
         },
@@ -163,7 +166,7 @@ const sendEmail = async (zipPath) => {
 // Main function to zip the folder and send the email
 const main = async () => {
   const folderPath = "./monocart-report";
-  const zipPath = path.join(__dirname, "report.zip");
+  const zipPath = path.join(__dirname, `${projectName} report.zip`);
   await delay(10000);
   try {
     // Zip the folder
@@ -171,7 +174,7 @@ const main = async () => {
     console.log("Folder zipped successfully");
 
     // Send the email with the zip file attached
-    await sendEmail(zipPath);
+    await sendEmail(zipPath, projectName);
   } catch (error) {
     console.error("Error in main function: ", error);
   }
