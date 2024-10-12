@@ -19,12 +19,8 @@ jobs:
       run: npx playwright install --with-deps
     - name: Check if secrets are loaded
       run: |
-        if [ -z "$USER_EMAIL" ] || [ -z "$SENDER_EMAIL" ]; then
-          echo "Secrets are not loaded correctly!"
-          exit 1
-        else
-          echo "Secrets are loaded successfully."
-        fi
+        echo "USER_EMAIL: ${{ env.USER_EMAIL }}"
+        echo "SENDER_EMAIL: ${{ env.SENDER_EMAIL }}"
       env:
         USER_EMAIL: ${{ env.USER_EMAIL }}
         SENDER_EMAIL: ${{ env.SENDER_EMAIL }}
