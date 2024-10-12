@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const fs = require("fs").promises;
 const path = require("path");
 const archiver = require("archiver");
-const jsonData = require("./json-report.json");
+const jsonData = require("./monocart-report/index.json");
 const fileSystem = require("fs");
 require("dotenv").config();
 
@@ -35,14 +35,18 @@ const zipFolder = async (folderPath, zipPath) => {
 // Function to convert JSON data to HTML table format
 const generateHtmlTable = (data) => {
   projectName = data.rows[0].title;
-  const stats = data.stats;
-  const total = stats.expected + stats.unexpected + stats.skipped;
-  const passedPercentage = ((stats.expected / total) * 100).toFixed(2);
-  const failedPercentage = ((stats.unexpected / total) * 100).toFixed(2);
-  const skippedPercentage = ((stats.skipped / total) * 100).toFixed(2);
-  const flakyPercentage = ((stats.flaky / total) * 100).toFixed(2);
-  const startTime = new Date(stats.startTime).toLocaleString();
-  const durationSeconds = (stats.duration / 1000).toFixed(2);
+  const stats = data.summary;
+  const total = stats.tests.value;
+  const passedPercentage = ((stats.passed.value / total) * 100).toFixed(2);
+  const passedTests = stats.passed.value;
+  const failedPercentage = ((stats.failed.value / total) * 100).toFixed(2);
+  const failedTests = stats.failed.value;
+  const skippedPercentage = ((stats.skipped.value / total) * 100).toFixed(2);
+  const skippedTests = stats.skipped.value;
+  const flakyPercentage = ((stats.flaky.value / total) * 100).toFixed(2);
+  const flakyTests = stats.flaky.value;
+  const startTime = data.dateH;
+  const durationSeconds = data.durationH;
 
   return `
   <!DOCTYPE html>
@@ -92,24 +96,24 @@ const generateHtmlTable = (data) => {
         </tr>
         <tr>
           <td>Test Passed</td>
-          <td>${stats.expected} (${passedPercentage}%)</td>
+          <td>${passedTests} (${passedPercentage}%)</td>
         </tr>
         <tr>
           <td>Skipped Tests</td>
-          <td>${stats.skipped} (${skippedPercentage}%)</td>
+          <td>${skippedTests} (${skippedPercentage}%)</td>
         </tr>
         <tr>
           <td>Test Failed</td>
-          <td>${stats.unexpected} (${failedPercentage}%)</td>
+          <td>${failedTests} (${failedPercentage}%)</td>
         </tr>
         <tr>
           <td>Flaky Tests</td>
-          <td>${stats.flaky} (${flakyPercentage}%)</td>
+          <td>${flakyTests} (${flakyPercentage}%)</td>
         </tr>
       </tbody>
     </table>
     <p>With regards,</p>
-    <p>Arghajit Singha</p>
+    <p>GP Profile QA Team</p>
   </body>
   </html>
   `;
