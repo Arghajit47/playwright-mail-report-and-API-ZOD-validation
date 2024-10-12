@@ -15,7 +15,7 @@
     "monocart-reporter": "^2.8.0"
   },
   "scripts": {
-    "test": "npx playwright test && npm run email",
+    "test": "npx playwright test",
     "email": "node sendReport.js"
   }
 }
