@@ -23,6 +23,7 @@ jobs:
         echo "SENDER_EMAIL: ${{ env.SENDER_EMAIL }}"
       env:
         USER_EMAIL: ${{ env.USER_EMAIL }}
+        USER_PASSWORD: ${{env.USER_PASSWORD}}
         SENDER_EMAIL: ${{ env.SENDER_EMAIL }}
     - name: Run Playwright tests
       run: npx playwright test
