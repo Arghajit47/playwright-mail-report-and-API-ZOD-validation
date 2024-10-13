@@ -6,7 +6,7 @@ export const userSchema = z.object({
   name: z.string(),
   username: z.string(),
   email: z.string().email(),
-});
+}).strict();
 
 export const getUserSchema = z.array(userSchema).or(z.array(z.any()).length(0));
 
@@ -30,7 +30,7 @@ export const exampleSchema = z
   link: z.string().url().optional(), // A valid URL string
   id: z.string().uuid(), // A UUID string
   description: z.string(), // A string field
-  type: z.enum(["video", "article", "image", "testimonial", "supporting-document"]), // Should be one of the allowed types
+  type: z.enum(["video", "article", "image", "testimonial"]), // Should be one of the allowed types
   title: z.string(), // A string field for the title
 })
 .strict();
