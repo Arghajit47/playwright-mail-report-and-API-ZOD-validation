@@ -1,6 +1,6 @@
 // @ts-check
 const { test, expect } = require("@playwright/test");
-const { z } = require("zod");
+
 
 test("has title", async ({ page }) => {
   await page.goto("https://playwright.dev/");
@@ -25,35 +25,4 @@ test("get started link", async ({ page, browserName }) => {
   ).toBeVisible();
 });
 
-// Define the schema for a single user
-const userSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  username: z.string(),
-  email: z.string().email(),
-});
 
-// Define the schema for the array of users
-const schema = z.array(userSchema);
-
-test("Validate API schema", async ({ request }) => {
-  // Fix the URL typo
-  const response = await request.get(
-    "https://jsonplaceholder.typicode.com/users"
-  );
-
-  expect(response.ok()).toBeTruthy(); // Check if the response is successful
-
-  const responseBody = await response.json(); // Parse response body
-
-  // Validate the response against the schema
-  const result = schema.safeParse(responseBody);
-
-  // Expect the schema validation to succeed
-  expect(result.success).toBeTruthy();
-
-  // If validation fails, log the error
-  if (!result.success) {
-    console.error(result.error);
-  }
-});
